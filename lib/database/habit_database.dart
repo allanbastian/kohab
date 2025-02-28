@@ -77,4 +77,8 @@ class HabitDatabase extends ChangeNotifier {
     });
     readHabits();
   }
+
+  Future<void> clear() async {
+    await isar.close();
+  }
 }
