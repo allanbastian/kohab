@@ -7,5 +7,7 @@ ThemeData darkTheme = ThemeData(
     secondary: const Color.fromARGB(255, 44, 44, 44),
     tertiary: Colors.grey.shade800,
     inversePrimary: Colors.grey.shade300,
+    surfaceBright: Colors.green,
+    outline: Colors.white,
   ),
 );

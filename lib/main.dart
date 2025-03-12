@@ -8,7 +8,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await HabitDatabase.initialize();
   await HabitDatabase().saveFirstLaunchDate();
-  
+
   runApp(
     MultiProvider(
       providers: [
