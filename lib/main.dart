@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kohab/database/habit_database.dart';
-import 'package:kohab/pages/home_page.dart';
+import 'package:kohab/pages/login_page.dart';
 import 'package:kohab/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -28,7 +28,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: Provider.of<ThemeProvider>(context).themeData,
-      home: const HomePage(),
+      // home: const HomePage(),
+      home: const LoginPage(),
     );
   }
 }
