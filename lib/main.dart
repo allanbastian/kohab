@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:kohab/database/habit_database.dart';
-import 'package:kohab/features/home/presentation/pages/home_page.dart';
 import 'package:kohab/core/theme/theme_provider.dart';
+import 'package:kohab/database/habit_database.dart';
+import 'package:kohab/features/auth/presentation/pages/login_page.dart';
+import 'package:kohab/service_locator.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: 'dotenv');
+  await dotenv.load(fileName: '.env');
   String supabaseUrl = dotenv.env['supabaseUrl'] ?? '';
   String supabaseKey = dotenv.env['supabaseKey'] ?? '';
   await Supabase.initialize(url: supabaseUrl, anonKey: supabaseKey);
+  WidgetsFlutterBinding.ensureInitialized();
+  setupServiceLocator();
   await HabitDatabase.initialize();
   await HabitDatabase().saveFirstLaunchDate();
 
@@ -34,8 +36,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: Provider.of<ThemeProvider>(context).themeData,
-      home: const HomePage(),
-      // home: const LoginPage(),
+      // home: const HomePage(),
+      home: const LoginPage(),
     );
   }
 }

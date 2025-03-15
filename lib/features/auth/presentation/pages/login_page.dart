@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kohab/common/helpers/app_navigator.dart';
+import 'package:kohab/core/components/my_button.dart';
 import 'package:kohab/core/components/my_snackbar.dart';
 import 'package:kohab/core/components/my_text_form_field.dart';
 import 'package:kohab/features/auth/data/models/login_req_params.dart';
@@ -6,11 +8,8 @@ import 'package:kohab/features/auth/domain/usecases/login_usecase.dart';
 import 'package:kohab/features/auth/presentation/pages/signup_page.dart';
 import 'package:kohab/features/home/presentation/pages/home_page.dart';
 import 'package:kohab/service_locator.dart';
-import 'package:reactive_button/reactive_button.dart';
 
 class LoginPage extends StatefulWidget {
-  static route() => MaterialPageRoute(builder: (context) => const LoginPage());
-
   const LoginPage({super.key});
 
   @override
@@ -34,11 +33,15 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  Future<dynamic> login() async {
+  void login() async {
     String email = _emailController.text.trim();
     String password = _passwordController.text.trim();
     if (password.length >= 8) {
-      await sl<LoginUsecase>().call(params: LoginReqParams(email: email, password: password));
+      final result = await sl<LoginUsecase>().call(params: LoginReqParams(email: email, password: password));
+      result.fold(
+        (err) => MySnackbar.displayErrorMessage(err.toString(), context),
+        (_) => AppNavigator.pushReplacement(context, const HomePage()),
+      );
     } else {
       MySnackbar.displayErrorMessage('Password must be atleast 8 characters long', context);
     }
@@ -86,12 +89,9 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
               const SizedBox(height: 24),
-              ReactiveButton(
-                title: 'Login',
-                activeColor: Theme.of(context).colorScheme.primary,
-                onPressed: login,
-                onSuccess: () => Navigator.pushReplacement(context, HomePage.route()),
-                onFailure: (error) => MySnackbar.displayErrorMessage(error.toString(), context),
+              MyButton(
+                text: 'Login',
+                onTap: login,
               ),
               const SizedBox(height: 24),
               Row(
@@ -99,7 +99,7 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   const Text('Don\'t have an account? '),
                   GestureDetector(
-                    onTap: () => Navigator.push(context, SignupPage.route()),
+                    onTap: () => AppNavigator.push(context, const SignupPage()),
                     child: const Text(' Register here', style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                 ],

@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:kohab/common/helpers/app_navigator.dart';
+import 'package:kohab/core/components/my_button.dart';
 import 'package:kohab/core/components/my_snackbar.dart';
 import 'package:kohab/core/components/my_text_form_field.dart';
 import 'package:kohab/features/auth/data/models/sign_up_req_params.dart';
 import 'package:kohab/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:kohab/features/home/presentation/pages/home_page.dart';
-
 import 'package:kohab/service_locator.dart';
-import 'package:reactive_button/reactive_button.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
-
-  static route() => MaterialPageRoute(builder: (context) => const SignupPage());
 
   @override
   State<SignupPage> createState() => _SignupPageState();
@@ -36,12 +34,16 @@ class _SignupPageState extends State<SignupPage> {
     super.dispose();
   }
 
-  Future<dynamic> regsiter() async {
+  void regsiter() async {
     String email = _emailController.text.trim();
     String password = _passwordController.text.trim();
     String confirmPassword = _confirmPasswordController.text.trim();
     if (password == confirmPassword) {
-      await sl<SignupUsecase>().call(params: SignUpReqParams(email: email, password: password));
+      final result = await sl<SignupUsecase>().call(params: SignUpReqParams(email: email, password: password));
+      result.fold(
+        (err) => MySnackbar.displayErrorMessage(err.toString(), context),
+        (_) => AppNavigator.pushReplacement(context, const HomePage()),
+      );
     } else {
       MySnackbar.displayErrorMessage('Passwords do not match', context);
     }
@@ -82,12 +84,9 @@ class _SignupPageState extends State<SignupPage> {
                 controller: _confirmPasswordController,
               ),
               const SizedBox(height: 24),
-              ReactiveButton(
-                title: 'Register',
-                activeColor: Theme.of(context).colorScheme.primary,
-                onPressed: regsiter,
-                onSuccess: () => Navigator.pushReplacement(context, HomePage.route()),
-                onFailure: (error) => MySnackbar.displayErrorMessage(error.toString(), context),
+              MyButton(
+                text: 'Register',
+                onTap: regsiter,
               ),
               const SizedBox(height: 24),
               Row(
