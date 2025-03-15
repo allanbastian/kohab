@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kohab/core/theme/theme_provider.dart';
 import 'package:kohab/database/habit_database.dart';
 import 'package:kohab/features/auth/presentation/pages/login_page.dart';
+import 'package:kohab/features/home/presentation/pages/home_page.dart';
 import 'package:kohab/service_locator.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -33,11 +34,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var session = sl<SupabaseClient>().auth.currentSession;
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: Provider.of<ThemeProvider>(context).themeData,
-      // home: const HomePage(),
-      home: const LoginPage(),
+      home: session != null ? const HomePage() : const LoginPage(),
     );
   }
 }

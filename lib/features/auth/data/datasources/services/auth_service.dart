@@ -6,6 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 abstract class AuthService {
   Future<Either> login(LoginReqParams params);
   Future<Either> signup(SignUpReqParams params);
+  Future<Either> signout();
 }
 
 class AuthServiceImpl extends AuthService {
@@ -30,6 +31,16 @@ class AuthServiceImpl extends AuthService {
       return Right(response);
     } on AuthException catch (e) {
       return Left('${e.code}: ${e.message}');
+    } catch (e) {
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either> signout() async {
+    try {
+      await _supabase.auth.signOut();
+      return const Right('success');
     } catch (e) {
       return Left(e.toString());
     }

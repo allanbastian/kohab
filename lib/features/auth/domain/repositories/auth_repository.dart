@@ -5,6 +5,7 @@ import 'package:kohab/features/auth/data/models/sign_up_req_params.dart';
 abstract class AuthRepository {
   Future<Either> signup(SignUpReqParams params);
   Future<Either> login(LoginReqParams params);
+  Future<bool> isLoggedIn();
   Future<Either> signout();
   Future<Either> getUserEmail();
 }

@@ -16,8 +16,10 @@ class _MyBottomNavBarState extends State<MyBottomNavBar> {
       currentIndex: _currentIndex,
       onTap: (index) => setState(() => _currentIndex = index),
       type: BottomNavigationBarType.shifting,
-      selectedIconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
-      unselectedIconTheme: IconThemeData(color: Theme.of(context).colorScheme.inversePrimary),
+      selectedIconTheme: IconThemeData(color: Theme.of(context).colorScheme.inversePrimary),
+      unselectedIconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
+      selectedLabelStyle: TextStyle(color: Theme.of(context).colorScheme.inversePrimary, fontWeight: FontWeight.bold),
+      unselectedLabelStyle: TextStyle(color: Theme.of(context).colorScheme.primary),
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Habits'),
         BottomNavigationBarItem(icon: Icon(Icons.people_outline), label: 'Friends'),
