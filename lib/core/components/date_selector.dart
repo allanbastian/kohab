@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:kohab/utils/utils.dart';
+import 'package:kohab/core/utils/utils.dart';
 
 class DateSelector extends StatefulWidget {
   const DateSelector({super.key});

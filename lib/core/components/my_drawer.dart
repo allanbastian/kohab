@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:kohab/theme/theme_provider.dart';
+import 'package:kohab/core/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 
 class MyDrawer extends StatelessWidget {

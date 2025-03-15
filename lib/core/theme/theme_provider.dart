@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kohab/theme/dark_mode.dart';
-import 'package:kohab/theme/light_mode.dart';
+import 'package:kohab/core/theme/dark_mode.dart';
+import 'package:kohab/core/theme/light_mode.dart';
 
 class ThemeProvider extends ChangeNotifier {
   ThemeData _themeData = darkTheme;

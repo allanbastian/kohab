@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:kohab/components/my_button.dart';
-import 'package:kohab/components/my_text_form_field.dart';
+import 'package:kohab/core/components/my_snackbar.dart';
+import 'package:kohab/core/components/my_text_form_field.dart';
+import 'package:kohab/features/auth/data/models/sign_up_req_params.dart';
+import 'package:kohab/features/auth/domain/usecases/signup_usecase.dart';
+import 'package:kohab/features/home/presentation/pages/home_page.dart';
+
+import 'package:kohab/service_locator.dart';
+import 'package:reactive_button/reactive_button.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -16,7 +22,7 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   void initState() {
-    super.initState(); 
+    super.initState();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
@@ -30,7 +36,16 @@ class _SignupPageState extends State<SignupPage> {
     super.dispose();
   }
 
-  regsiter() {}
+  Future<dynamic> regsiter() async {
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+    String confirmPassword = _confirmPasswordController.text.trim();
+    if (password == confirmPassword) {
+      await sl<SignupUsecase>().call(params: SignUpReqParams(email: email, password: password));
+    } else {
+      MySnackbar.displayErrorMessage('Passwords do not match', context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +57,7 @@ class _SignupPageState extends State<SignupPage> {
           padding: const EdgeInsets.all(25),
           child: Column(
             children: [
+              //TODO: replace with app logo
               Icon(
                 Icons.person,
                 size: 80,
@@ -66,7 +82,13 @@ class _SignupPageState extends State<SignupPage> {
                 controller: _confirmPasswordController,
               ),
               const SizedBox(height: 24),
-              MyButton(text: 'Register', onTap: regsiter),
+              ReactiveButton(
+                title: 'Register',
+                activeColor: Theme.of(context).colorScheme.primary,
+                onPressed: regsiter,
+                onSuccess: () => Navigator.pushReplacement(context, HomePage.route()),
+                onFailure: (error) => MySnackbar.displayErrorMessage(error.toString(), context),
+              ),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

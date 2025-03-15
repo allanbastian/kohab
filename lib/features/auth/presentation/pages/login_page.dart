@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:kohab/components/my_button.dart';
-import 'package:kohab/components/my_text_form_field.dart';
-import 'package:kohab/pages/signup_page.dart';
+import 'package:kohab/core/components/my_snackbar.dart';
+import 'package:kohab/core/components/my_text_form_field.dart';
+import 'package:kohab/features/auth/data/models/login_req_params.dart';
+import 'package:kohab/features/auth/domain/usecases/login_usecase.dart';
+import 'package:kohab/features/auth/presentation/pages/signup_page.dart';
+import 'package:kohab/features/home/presentation/pages/home_page.dart';
+import 'package:kohab/service_locator.dart';
+import 'package:reactive_button/reactive_button.dart';
 
 class LoginPage extends StatefulWidget {
   static route() => MaterialPageRoute(builder: (context) => const LoginPage());
@@ -29,7 +34,15 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
   }
 
-  login() {}
+  Future<dynamic> login() async {
+    String email = _emailController.text.trim();
+    String password = _passwordController.text.trim();
+    if (password.length >= 8) {
+      await sl<LoginUsecase>().call(params: LoginReqParams(email: email, password: password));
+    } else {
+      MySnackbar.displayErrorMessage('Password must be atleast 8 characters long', context);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,9 +86,12 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
               const SizedBox(height: 24),
-              MyButton(
-                text: 'Login',
-                onTap: login,
+              ReactiveButton(
+                title: 'Login',
+                activeColor: Theme.of(context).colorScheme.primary,
+                onPressed: login,
+                onSuccess: () => Navigator.pushReplacement(context, HomePage.route()),
+                onFailure: (error) => MySnackbar.displayErrorMessage(error.toString(), context),
               ),
               const SizedBox(height: 24),
               Row(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kohab/components/my_habit_tile.dart';
+import 'package:kohab/core/components/my_habit_tile.dart';
 
 void main() {
   group('MyHabitTile Widget Tests', () {

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kohab/theme/dark_mode.dart';
-import 'package:kohab/theme/light_mode.dart';
-import 'package:kohab/theme/theme_provider.dart';
+import 'package:kohab/core/theme/dark_mode.dart';
+import 'package:kohab/core/theme/light_mode.dart';
+import 'package:kohab/core/theme/theme_provider.dart';
 
 void main() {
   group('ThemeProvider Tests', () {
