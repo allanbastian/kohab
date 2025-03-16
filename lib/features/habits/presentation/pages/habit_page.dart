@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kohab/core/components/date_selector.dart';
-import 'package:kohab/core/components/my_habit_tile.dart';
+import 'package:kohab/core/components/my_loading_indicator.dart';
+import 'package:kohab/core/components/my_snackbar.dart';
+import 'package:kohab/features/habits/domain/entities/habit_entity.dart';
+import 'package:kohab/features/habits/presentation/blocs/habits_cubit.dart';
+import 'package:kohab/features/habits/presentation/widgets/habit_list.dart';
 
 class HabitPage extends StatefulWidget {
   const HabitPage({super.key});
@@ -10,12 +15,20 @@ class HabitPage extends StatefulWidget {
 }
 
 class _HabitPageState extends State<HabitPage> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+  late final TabController _tabController;
+  late final HabitsCubit _cubit;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _cubit = HabitsCubit()..getAllUserHabits();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -23,7 +36,6 @@ class _HabitPageState extends State<HabitPage> with SingleTickerProviderStateMix
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
-        //Date selector
         const DateSelector(),
         const SizedBox(height: 12),
         TabBar(
@@ -39,58 +51,60 @@ class _HabitPageState extends State<HabitPage> with SingleTickerProviderStateMix
           child: TabBarView(
             controller: _tabController,
             children: [
-              // All habits
-              Expanded(
-                child: ListView.separated(
-                  itemCount: 10,
-                  separatorBuilder: (context, index) => const SizedBox(height: 8),
-                  itemBuilder: (context, index) {
-                    return MyHabitTile(
-                      isCompleted: false,
-                      text: '$index',
-                      onChanged: (_) {},
-                      editHabit: () {},
-                      deleteHabit: () {},
-                    );
-                  },
-                ),
+              _buildHabitTab(
+                emptyMessage: 'Start adding habits to track them!',
+                habitSelector: (state) => state.habits,
+                useConsumer: true,
               ),
-              //Personal habits
-              Expanded(
-                child: ListView.separated(
-                  itemCount: 4,
-                  separatorBuilder: (context, index) => const SizedBox(height: 8),
-                  itemBuilder: (context, index) {
-                    return MyHabitTile(
-                      isCompleted: false,
-                      text: '$index',
-                      onChanged: (_) {},
-                      editHabit: () {},
-                      deleteHabit: () {},
-                    );
-                  },
-                ),
+              _buildHabitTab(
+                emptyMessage: 'Start adding personal habits to track them!',
+                habitSelector: (state) => state.personalHabits,
               ),
-              //Group habits
-              Expanded(
-                child: ListView.separated(
-                  itemCount: 6,
-                  separatorBuilder: (context, index) => const SizedBox(height: 8),
-                  itemBuilder: (context, index) {
-                    return MyHabitTile(
-                      isCompleted: false,
-                      text: '$index',
-                      onChanged: (_) {},
-                      editHabit: () {},
-                      deleteHabit: () {},
-                    );
-                  },
-                ),
+              _buildHabitTab(
+                emptyMessage: 'Start adding habits with friends to track them!',
+                habitSelector: (state) => state.collabHabits,
               ),
             ],
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildHabitTab({
+    required String emptyMessage,
+    required List<HabitEntity> Function(HabitsLoaded) habitSelector,
+    bool useConsumer = false,
+  }) {
+    Widget builder(BuildContext context, HabitsState state) {
+      if (state is HabitsLoading || state is HabitsInitial) {
+        return const MyLoadingIndicator();
+      }
+      if (state is HabitsLoaded) {
+        final habits = habitSelector(state);
+        if (habits.isEmpty) {
+          return Center(child: Text(emptyMessage));
+        }
+        return HabitList(habits: habits);
+      }
+      return const SizedBox.shrink();
+    }
+
+    if (useConsumer) {
+      return BlocConsumer<HabitsCubit, HabitsState>(
+        bloc: _cubit,
+        listener: (context, state) {
+          if (state is HabitsLoadingError) {
+            MySnackbar.displayErrorMessage(state.error, context);
+          }
+        },
+        builder: builder,
+      );
+    }
+
+    return BlocBuilder<HabitsCubit, HabitsState>(
+      bloc: _cubit,
+      builder: builder,
     );
   }
 }

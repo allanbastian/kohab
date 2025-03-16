@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kohab/core/theme/theme_provider.dart';
 import 'package:kohab/features/auth/presentation/pages/login_page.dart';
+import 'package:kohab/features/habits/presentation/blocs/habits_cubit.dart';
 import 'package:kohab/features/home/presentation/pages/home_page.dart';
 import 'package:kohab/service_locator.dart';
 import 'package:provider/provider.dart';
@@ -19,7 +21,12 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
       ],
-      child: const MyApp(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => HabitsCubit()),
+        ],
+        child: const MyApp(),
+      ),
     ),
   );
 }
