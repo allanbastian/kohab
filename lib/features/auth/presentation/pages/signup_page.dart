@@ -5,7 +5,6 @@ import 'package:kohab/core/components/my_snackbar.dart';
 import 'package:kohab/core/components/my_text_form_field.dart';
 import 'package:kohab/features/auth/data/models/sign_up_req_params.dart';
 import 'package:kohab/features/auth/domain/usecases/signup_usecase.dart';
-import 'package:kohab/features/home/presentation/pages/home_page.dart';
 import 'package:kohab/service_locator.dart';
 
 class SignupPage extends StatefulWidget {
@@ -42,7 +41,7 @@ class _SignupPageState extends State<SignupPage> {
       final result = await sl<SignupUsecase>().call(params: SignUpReqParams(email: email, password: password));
       result.fold(
         (err) => MySnackbar.displayErrorMessage(err.toString(), context),
-        (_) => AppNavigator.pushReplacement(context, const HomePage()),
+        (_) => AppNavigator.pop(context),
       );
     } else {
       MySnackbar.displayErrorMessage('Passwords do not match', context);

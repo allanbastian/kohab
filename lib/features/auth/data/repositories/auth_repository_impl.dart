@@ -7,8 +7,6 @@ import 'package:kohab/service_locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
-  AuthRepositoryImpl();
-
   @override
   Future<Either> login(LoginReqParams params) async {
     final data = await sl<AuthService>().login(params);
@@ -45,14 +43,11 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<Either> signout() async {
     final data = await sl<AuthService>().signout();
-    return data.fold(
-      (err) => Left(err),
-      (data) async {
-        final SharedPreferences sp = await SharedPreferences.getInstance();
-        sp.setBool('isLoggedIn', false);
-        return Right(data);
-      }
-    );
+    return data.fold((err) => Left(err), (data) async {
+      final SharedPreferences sp = await SharedPreferences.getInstance();
+      sp.setBool('isLoggedIn', false);
+      return Right(data);
+    });
   }
 
   @override

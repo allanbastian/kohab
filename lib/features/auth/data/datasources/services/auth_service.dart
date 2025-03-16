@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:dartz/dartz.dart';
 import 'package:kohab/features/auth/data/models/login_req_params.dart';
 import 'package:kohab/features/auth/data/models/sign_up_req_params.dart';
@@ -7,6 +9,7 @@ abstract class AuthService {
   Future<Either> login(LoginReqParams params);
   Future<Either> signup(SignUpReqParams params);
   Future<Either> signout();
+  Future<void> resetPassword(String email);
 }
 
 class AuthServiceImpl extends AuthService {
@@ -43,6 +46,15 @@ class AuthServiceImpl extends AuthService {
       return const Right('success');
     } catch (e) {
       return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<void> resetPassword(String email) async {
+    try {
+      await _supabase.auth.resetPasswordForEmail(email);
+    } catch (e) {
+      print(e);
     }
   }
 }

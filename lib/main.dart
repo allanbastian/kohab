@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kohab/core/theme/theme_provider.dart';
-import 'package:kohab/database/habit_database.dart';
 import 'package:kohab/features/auth/presentation/pages/login_page.dart';
 import 'package:kohab/features/home/presentation/pages/home_page.dart';
 import 'package:kohab/service_locator.dart';
@@ -15,14 +14,10 @@ void main() async {
   await Supabase.initialize(url: supabaseUrl, anonKey: supabaseKey);
   WidgetsFlutterBinding.ensureInitialized();
   setupServiceLocator();
-  await HabitDatabase.initialize();
-  await HabitDatabase().saveFirstLaunchDate();
-
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => ThemeProvider()),
-        ChangeNotifierProvider(create: (context) => HabitDatabase()),
       ],
       child: const MyApp(),
     ),
