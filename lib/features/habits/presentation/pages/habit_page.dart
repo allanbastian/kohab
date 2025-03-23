@@ -22,7 +22,7 @@ class _HabitPageState extends State<HabitPage> with SingleTickerProviderStateMix
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    _cubit = HabitsCubit()..getAllUserHabits();
+    _cubit = context.read<HabitsCubit>()..getAllUserHabits();
   }
 
   @override

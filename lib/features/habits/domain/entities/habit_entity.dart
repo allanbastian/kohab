@@ -1,12 +1,12 @@
 class HabitEntity {
-  final int id;
+  final int? id;
   final String text;
   final String createdBy;
   final bool isCollaborative;
   final DateTime createdAt;
 
   HabitEntity({
-    required this.id,
+    this.id,
     required this.text,
     required this.createdBy,
     required this.isCollaborative,

@@ -1,11 +1,11 @@
 import 'dart:convert';
 
 class HabitModel {
-  final int id;
-  final String text;
-  final String createdBy;
-  final bool isCollaborative;
-  final DateTime createdAt;
+  final int? id;
+  final String? text;
+  final String? createdBy;
+  final bool? isCollaborative;
+  final DateTime? createdAt;
 
   HabitModel({
     required this.id,
@@ -34,20 +34,20 @@ class HabitModel {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
-      'text': text,
-      'createdBy': createdBy,
-      'isCollaborative': isCollaborative,
-      'createdAt': createdAt.toIso8601String(),
+      'name': text,
+      'created_by': createdBy,
+      'is_collaborative': isCollaborative,
+      'created_at': createdAt?.toIso8601String(),
     };
   }
 
   factory HabitModel.fromMap(Map<String, dynamic> map) {
     return HabitModel(
       id: map['id'] as int,
-      text: map['text'] as String,
-      createdBy: map['createdBy'] as String,
-      isCollaborative: map['isCollaborative'] as bool,
-      createdAt: DateTime.parse(map['createdAt'] as String),
+      text: map['name'] as String,
+      createdBy: map['created_by'] as String,
+      isCollaborative: map['is_collaborative'] as bool,
+      createdAt: DateTime.parse(map['created_at'] as String),
     );
   }
 
@@ -63,21 +63,12 @@ class HabitModel {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
-    return other is HabitModel &&
-      other.id == id &&
-      other.text == text &&
-      other.createdBy == createdBy &&
-      other.isCollaborative == isCollaborative &&
-      other.createdAt == createdAt;
+
+    return other is HabitModel && other.id == id && other.text == text && other.createdBy == createdBy && other.isCollaborative == isCollaborative && other.createdAt == createdAt;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^
-      text.hashCode ^
-      createdBy.hashCode ^
-      isCollaborative.hashCode ^
-      createdAt.hashCode;
+    return id.hashCode ^ text.hashCode ^ createdBy.hashCode ^ isCollaborative.hashCode ^ createdAt.hashCode;
   }
 }
