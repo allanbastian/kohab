@@ -10,6 +10,7 @@ abstract class HabitsService {
   Future<Either> getAllUserHabits();
   Future<Either> updateHabit(HabitEntity habitEntity);
   Future<Either> addNewHabit(HabitEntity entity);
+  Future<Either> deleteHabit(int id);
 }
 
 class HabitsServiceImpl extends HabitsService {
@@ -53,6 +54,17 @@ class HabitsServiceImpl extends HabitsService {
       List<HabitModel> res = result.map((e) => HabitModel.fromMap(e)).toList();
       assert(res.length == 1);
       return Right(res.first);
+    } catch (e, stackTrace) {
+      DebugLogger.log.logE(e, stackTrace: stackTrace);
+      return Left(e.toString());
+    }
+  }
+
+  @override
+  Future<Either> deleteHabit(int id) async {
+    try {
+      await sl<SupabaseClient>().from('habits').delete().eq('id', id);
+      return const Right('success');
     } catch (e, stackTrace) {
       DebugLogger.log.logE(e, stackTrace: stackTrace);
       return Left(e.toString());

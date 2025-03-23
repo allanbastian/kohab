@@ -5,4 +5,5 @@ abstract class HabitsRepository {
   Future<Either> getAllUserHabits();
   Future<Either> addNewHabit(HabitEntity entity);
   Future<Either> updateHabit(HabitEntity entity);
+  Future<Either> deleteHabit(int id);
 }

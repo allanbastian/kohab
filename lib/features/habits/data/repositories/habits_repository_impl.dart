@@ -40,4 +40,13 @@ class HabitsRepositoryImpl extends HabitsRepository {
       (habit) => Right(habit),
     );
   }
+
+  @override
+  Future<Either> deleteHabit(int id) async {
+    final data = await sl<HabitsService>().deleteHabit(id);
+    return data.fold(
+      (err) => Left(err),
+      (_) => const Right('success'),
+    );
+  }
 }

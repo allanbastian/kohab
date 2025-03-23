@@ -38,9 +38,7 @@ class _HomePageState extends State<HomePage> {
         title: const Text('KOHAB'),
         actions: [
           IconButton(
-            onPressed: () {
-              showNewHabitDialog(context, _addNewHabitController);
-            },
+            onPressed: () => showNewHabitDialog(context, _addNewHabitController),
             icon: const Icon(CupertinoIcons.add),
           ),
         ],

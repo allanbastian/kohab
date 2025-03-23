@@ -43,11 +43,14 @@ class AuthRepositoryImpl extends AuthRepository {
   @override
   Future<Either> signout() async {
     final data = await sl<AuthService>().signout();
-    return data.fold((err) => Left(err), (data) async {
-      final SharedPreferences sp = await SharedPreferences.getInstance();
-      sp.setBool('isLoggedIn', false);
-      return Right(data);
-    });
+    return data.fold(
+      (err) => Left(err),
+      (data) async {
+        final SharedPreferences sp = await SharedPreferences.getInstance();
+        sp.setBool('isLoggedIn', false);
+        return Right(data);
+      },
+    );
   }
 
   @override

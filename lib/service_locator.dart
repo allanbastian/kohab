@@ -4,11 +4,13 @@ import 'package:kohab/features/auth/data/repositories/auth_repository_impl.dart'
 import 'package:kohab/features/auth/domain/repositories/auth_repository.dart';
 import 'package:kohab/features/auth/domain/usecases/is_logged_in_usecase.dart';
 import 'package:kohab/features/auth/domain/usecases/login_usecase.dart';
+import 'package:kohab/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:kohab/features/auth/domain/usecases/signup_usecase.dart';
 import 'package:kohab/features/habits/data/datasources/habits_service.dart';
 import 'package:kohab/features/habits/data/repositories/habits_repository_impl.dart';
 import 'package:kohab/features/habits/domain/repositories/habits_repository.dart';
 import 'package:kohab/features/habits/domain/usecases/add_new_habit_usecase.dart';
+import 'package:kohab/features/habits/domain/usecases/delete_habit_usecase.dart';
 import 'package:kohab/features/habits/domain/usecases/get_all_habits_usecase.dart';
 import 'package:kohab/features/habits/domain/usecases/update_habit_usecase.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -30,7 +32,9 @@ void setupServiceLocator() {
   sl.registerSingleton<SignupUsecase>(SignupUsecase());
   sl.registerSingleton<LoginUsecase>(LoginUsecase());
   sl.registerSingleton<IsLoggedInUsecase>(IsLoggedInUsecase());
+  sl.registerSingleton<LogoutUsecase>(LogoutUsecase());
   sl.registerSingleton<GetAllHabitsUsecase>(GetAllHabitsUsecase());
   sl.registerSingleton<AddNewHabitUsecase>(AddNewHabitUsecase());
   sl.registerSingleton<UpdateHabitUsecase>(UpdateHabitUsecase());
+  sl.registerSingleton<DeleteHabitUsecase>(DeleteHabitUsecase());
 }

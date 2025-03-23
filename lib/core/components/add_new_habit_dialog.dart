@@ -5,8 +5,9 @@ import 'package:kohab/core/components/my_snackbar.dart';
 import 'package:kohab/core/components/my_text_form_field.dart';
 import 'package:kohab/features/habits/domain/entities/habit_entity.dart';
 import 'package:kohab/features/habits/domain/usecases/add_new_habit_usecase.dart';
-import 'package:kohab/features/habits/domain/usecases/get_all_habits_usecase.dart';
+import 'package:kohab/features/habits/presentation/blocs/habits_cubit.dart';
 import 'package:kohab/service_locator.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<dynamic> showNewHabitDialog(BuildContext context, TextEditingController controller) {
@@ -57,7 +58,7 @@ Future<dynamic> showNewHabitDialog(BuildContext context, TextEditingController c
                       Navigator.pop(context);
                       result.fold(
                         (err) => MySnackbar.displayErrorMessage(err, context),
-                        (_) async => await sl<GetAllHabitsUsecase>().call(),
+                        (_) => context.read<HabitsCubit>().getAllUserHabits(),
                       );
                     },
                     color: Theme.of(context).colorScheme.surfaceBright,
