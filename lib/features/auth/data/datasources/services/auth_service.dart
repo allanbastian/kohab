@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'package:dartz/dartz.dart';
 import 'package:kohab/common/helpers/logger.dart';
 import 'package:kohab/features/auth/data/models/login_req_params.dart';
