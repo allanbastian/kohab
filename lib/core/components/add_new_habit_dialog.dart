@@ -15,55 +15,57 @@ Future<dynamic> showNewHabitDialog(BuildContext context, TextEditingController c
     builder: (context) {
       bool isCollaborative = false;
       return AlertDialog(
-        content: Container(
-          height: 220,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            color: Colors.transparent,
-          ),
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              MyTextFormField(
-                hintText: "Add new habit",
-                obscureText: false,
-                controller: controller,
+        content: StatefulBuilder(
+          builder: (context, setState) {
+            return Container(
+              height: 220,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.transparent,
               ),
-              Row(
+              padding: const EdgeInsets.all(8),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  const Text('Is collaborative? '),
-                  const Spacer(),
-                  CupertinoSwitch(
-                    value: isCollaborative,
-                    onChanged: (_) {
-                      isCollaborative = !isCollaborative;
+                  MyTextFormField(
+                    hintText: "Add new habit",
+                    obscureText: false,
+                    controller: controller,
+                  ),
+                  Row(
+                    children: [
+                      const Text('Is collaborative? '),
+                      const Spacer(),
+                      CupertinoSwitch(
+                        value: isCollaborative,
+                        onChanged: (_) => setState(() => isCollaborative = !isCollaborative),
+                      ),
+                    ],
+                  ),
+                  MyButton(
+                    text: 'Submit',
+                    onTap: () async {
+                      HabitEntity entity = HabitEntity(
+                        id: null,
+                        text: controller.text.trim(),
+                        createdBy: sl<SupabaseClient>().auth.currentUser!.id,
+                        isCollaborative: isCollaborative,
+                        createdAt: DateTime.now(),
+                      );
+                      final result = await sl<AddNewHabitUsecase>().call(params: entity);
+                      controller.text = '';
+                      Navigator.pop(context);
+                      result.fold(
+                        (err) => MySnackbar.displayErrorMessage(err, context),
+                        (_) async => await sl<GetAllHabitsUsecase>().call(),
+                      );
                     },
+                    color: Theme.of(context).colorScheme.surfaceBright,
                   ),
                 ],
               ),
-              MyButton(
-                text: 'Submit',
-                onTap: () async {
-                  HabitEntity entity = HabitEntity(
-                    id: null,
-                    text: controller.text.trim(),
-                    createdBy: sl<SupabaseClient>().auth.currentUser!.id,
-                    isCollaborative: isCollaborative,
-                    createdAt: DateTime.now(),
-                  );
-                  final result = await sl<AddNewHabitUsecase>().call(params: entity);
-                  controller.text = '';
-                  Navigator.pop(context);
-                  result.fold(
-                    (err) => MySnackbar.displayErrorMessage(err, context),
-                    (_) async => await sl<GetAllHabitsUsecase>().call(),
-                  );
-                },
-                color: Theme.of(context).colorScheme.surfaceBright,
-              ),
-            ],
-          ),
+            );
+          },
         ),
       );
     },
